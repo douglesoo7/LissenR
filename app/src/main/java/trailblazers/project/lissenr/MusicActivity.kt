@@ -1,12 +1,11 @@
 package trailblazers.project.lissenr
 
-import android.content.ComponentName
+import android.content.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.content.Intent
-import android.content.ServiceConnection
 import android.media.MediaPlayer
 import android.os.IBinder
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import kotlinx.android.synthetic.main.activity_music.*
@@ -20,6 +19,7 @@ class MusicActivity : AppCompatActivity() {
     var artist: String? = null
     var songName: String? = null
     private var musicService: MusicService? = null
+    lateinit var broadcastReceiver: BroadcastReceiver
 
 
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
@@ -37,8 +37,29 @@ class MusicActivity : AppCompatActivity() {
         getData()
         setViews()
         initViewsAndClickListeners()
+        receiveSensorUpdates()
         val intent = Intent(this, MusicService::class.java)
         bindService(intent, serviceConnection, BIND_AUTO_CREATE)
+    }
+
+    private fun receiveSensorUpdates() {
+        val intentFilter = IntentFilter("trailblazers.project.lissenr")
+        broadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                Log.d("KunalActivity", "msg")
+                val Status = intent?.getStringExtra("status")
+                if (Status.equals("Walking")) {
+                    Log.d("KunalActivity", "walking")
+                    if (tvStatus.visibility != View.VISIBLE)
+                        tvStatus.visibility = View.VISIBLE
+                } else {
+                    Log.d("KunalActivity", "Idle")
+                    if (tvStatus.visibility == View.VISIBLE)
+                        tvStatus.visibility = View.INVISIBLE
+                }
+            }
+        }
+        registerReceiver(broadcastReceiver, intentFilter)
     }
 
     private fun getData() {
@@ -55,5 +76,10 @@ class MusicActivity : AppCompatActivity() {
 
     private fun initViewsAndClickListeners() {
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(broadcastReceiver)
     }
 }

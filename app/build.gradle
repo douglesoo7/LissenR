@@ -44,4 +44,6 @@ dependencies {
 
     //circular photo
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    //Corountines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1'
 }
