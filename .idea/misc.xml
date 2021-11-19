@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/MASAI/AndroidStudioProjects/LissenR/app/src/main/res/layout/activity_main.xml" value="0.16302083333333334" />
         <entry key="..\:/MASAI/AndroidStudioProjects/LissenR/app/src/main/res/layout/activity_music.xml" value="0.14666666666666667" />
+        <entry key="..\:/MASAI/AndroidStudioProjects/LissenR/app/src/main/res/layout/item_layout.xml" value="0.16302083333333334" />
       </map>
     </option>
   </component>

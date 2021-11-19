@@ -1,26 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="16dp">
-    <Button
-        android:id="@+id/btnPlayBackgroundMusic"
+    android:background="#281b2d"
+    tools:context=".MusicActivity">
+
+
+    <TextView
+        android:id="@+id/tvSongName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="Play background Sound"/>
-    <Button
-        android:id="@+id/btnPauseBackgroundMusic"
-        android:layout_width="match_parent"
+        android:layout_margin="20dp"
+        android:background="#01080f"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Song Name"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:drawableLeftCompat="@mipmap/ic_launcher_round" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/ivSongImage"
+        android:layout_width="196dp"
+        android:layout_height="196dp"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/ic_launcher"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="2dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPlay"
+        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="420dp"
+        android:text="play"
+        app:cornerRadius="48dp" />
+
+    <ImageButton
+        android:id="@+id/btnPrev"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="Pause background Sound"/>
-    <Button
-        android:id="@+id/btnStopBackgroundMusic"
-        android:layout_width="match_parent"
+        android:layout_below="@id/ivSongImage"
+        android:layout_margin="60dp"
+        android:background="#07182c"
+        android:src="@drawable/ic_previous" />
+
+    <ImageButton
+        android:id="@+id/btnNextt"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="Stop background Sound"/>
-</LinearLayout>
+        android:layout_below="@id/ivSongImage"
+        android:layout_margin="60dp"
+        android:layout_toEndOf="@id/btnPlay"
+        android:background="#07182c"
+        android:src="@drawable/ic__nextbtn" />
+
+</RelativeLayout>

@@ -5,17 +5,20 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.content.Intent
 import android.content.ServiceConnection
+import android.media.MediaPlayer
 import android.os.IBinder
 import android.view.View
 import android.widget.Button
+import kotlinx.android.synthetic.main.activity_music.*
 import trailblazers.project.lissenr.MusicService.ServiceBinder
 
 
 class MusicActivity : AppCompatActivity() {
 
-    private var mBtnStart: Button? = null
-    private var mBtnPause: Button? = null
-    private var mBtnStop: Button? = null
+    var image: Int? = null
+    var song: Int? = null
+    var artist: String? = null
+    var songName: String? = null
     private var musicService: MusicService? = null
 
 
@@ -23,7 +26,6 @@ class MusicActivity : AppCompatActivity() {
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
             val serviceBinder = binder as ServiceBinder
             musicService = serviceBinder.musicService
-
         }
 
         override fun onServiceDisconnected(name: ComponentName) {}
@@ -32,17 +34,26 @@ class MusicActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_music)
-        initViews()
+        getData()
+        setViews()
+        initViewsAndClickListeners()
         val intent = Intent(this, MusicService::class.java)
         bindService(intent, serviceConnection, BIND_AUTO_CREATE)
     }
 
-    private fun initViews() {
-        mBtnStart = findViewById(R.id.btnPlayBackgroundMusic)
-        mBtnPause = findViewById(R.id.btnPauseBackgroundMusic)
-        mBtnStop = findViewById(R.id.btnStopBackgroundMusic)
-        mBtnStart?.setOnClickListener(View.OnClickListener { musicService!!.play() })
-        mBtnPause?.setOnClickListener(View.OnClickListener { musicService!!.pause() })
-        mBtnStop?.setOnClickListener(View.OnClickListener { musicService!!.stop() })
+    private fun getData() {
+        image = intent.getIntExtra("image", 0)
+        artist = intent.getStringExtra("artist")
+        song = intent.getIntExtra("music", 0)
+        songName = intent.getStringExtra("songName")
+    }
+
+    fun setViews() {
+        tvSongName.text = songName
+        ivSongImage.setImageResource(image!!)
+    }
+
+    private fun initViewsAndClickListeners() {
+
     }
 }
