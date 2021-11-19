@@ -23,6 +23,7 @@ class MusicActivity : AppCompatActivity() {
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
             val serviceBinder = binder as ServiceBinder
             musicService = serviceBinder.musicService
+
         }
 
         override fun onServiceDisconnected(name: ComponentName) {}
