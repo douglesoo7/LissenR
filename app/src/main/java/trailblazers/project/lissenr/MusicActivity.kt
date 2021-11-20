@@ -4,12 +4,21 @@ import android.content.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.media.MediaPlayer
+import android.os.Handler
 import android.os.IBinder
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.SeekBar
+import androidx.annotation.MainThread
 import kotlinx.android.synthetic.main.activity_music.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import trailblazers.project.lissenr.MainActivity.Companion.musicArrayList
 import trailblazers.project.lissenr.MusicService.ServiceBinder
+import java.util.ArrayList
 
 
 class MusicActivity : AppCompatActivity() {
@@ -18,8 +27,15 @@ class MusicActivity : AppCompatActivity() {
     var song: Int? = null
     var artist: String? = null
     var songName: String? = null
+    var songPosition: Int = -1
     private var musicService: MusicService? = null
     lateinit var broadcastReceiver: BroadcastReceiver
+    val handler = Handler()
+
+    companion object {
+        var songList = ArrayList<MusicModel>()
+        var mediaPlayer: MediaPlayer? = null
+    }
 
 
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
@@ -34,49 +50,87 @@ class MusicActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_music)
-        getData()
+        getIntentMethod()
         setViews()
-        initViewsAndClickListeners()
-        receiveSensorUpdates()
         val intent = Intent(this, MusicService::class.java)
         bindService(intent, serviceConnection, BIND_AUTO_CREATE)
+        seekBarChange()
+        changeDurationPlayed()
     }
 
-    private fun receiveSensorUpdates() {
-        Log.d("KunalActivity", "receiveSensorUpdates")
-        val intentFilter = IntentFilter("trailblazers.project.lissenr")
+    private fun changeDurationPlayed() {
+        this@MusicActivity.runOnUiThread(object : Runnable {
+            override fun run() {
+                if (mediaPlayer != null) {
+                    val mCurrentPosition = mediaPlayer!!.currentPosition / 1000
+                    seekBar.progress = mCurrentPosition
+                    tvCurrentPlayingTime.text = formattedTime(mCurrentPosition)
+                }
+                handler.postDelayed(this, 1000)
+            }
 
-        broadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                Log.d("KunalActivity", "msg")
-                val Status = intent?.getStringExtra("status")
-                if (Status!!.equals("Walking")) {
-                    Log.d("KunalActivity", "walking")
-                    if (tvStatus.visibility != View.VISIBLE)
-                        tvStatus.visibility = View.VISIBLE
-                } else {
-                    Log.d("KunalActivity", "Idle")
-                    if (tvStatus.visibility == View.VISIBLE)
-                        tvStatus.visibility = View.INVISIBLE
+        })
+    }
+
+    private fun formattedTime(mCurrentPosition: Int): String {
+        var totalOut = ""
+        var totalNew = ""
+        var seconds = (mCurrentPosition % 60).toString()
+        var minutes = (mCurrentPosition / 60).toString()
+        totalOut = "$minutes:$seconds"
+        totalNew = "$minutes:0$seconds"
+        if (seconds.length == 1) {
+            return totalNew
+        } else {
+            return totalOut
+        }
+    }
+
+    private fun seekBarChange() {
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (mediaPlayer != null && fromUser) {
+                    mediaPlayer!!.seekTo(progress * 1000)
                 }
             }
-        }
-        registerReceiver(broadcastReceiver, intentFilter)
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+
+        })
     }
 
-    private fun getData() {
+    private fun getIntentMethod() {
+        songPosition = intent.getIntExtra("songPosition", -1)
+        songList = musicArrayList
+        if (songList != null) {
+            btnPlay.text = "Pause"
+            song = songList[songPosition].msong
+        }
         image = intent.getIntExtra("image", 0)
         artist = intent.getStringExtra("artist")
-        song = intent.getIntExtra("music", 0)
         songName = intent.getStringExtra("songName")
+        if (mediaPlayer != null) {
+            mediaPlayer!!.stop()
+            mediaPlayer!!.release()
+            mediaPlayer = MediaPlayer.create(applicationContext, song!!)
+            mediaPlayer!!.start()
+        } else {
+            mediaPlayer = MediaPlayer.create(applicationContext, song!!)
+            mediaPlayer!!.start()
+            seekBar.max = mediaPlayer!!.duration / 1000
+        }
     }
 
     fun setViews() {
         SongName.text = songName
         ivSongImage.setImageResource(image!!)
-    }
-
-    private fun initViewsAndClickListeners() {
+        if (mediaPlayer != null) {
+            tvTotalPlayingTime.text = formattedTime(mediaPlayer!!.duration/1000)
+        }
 
     }
 

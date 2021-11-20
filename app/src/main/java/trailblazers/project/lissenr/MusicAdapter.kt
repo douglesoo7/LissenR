@@ -15,7 +15,7 @@ class MusicAdapter(private val musiclist: ArrayList<MusicModel>, private val ite
 
     override fun onBindViewHolder(holder: MusicViewHolder, position: Int) {
         val music = musiclist[position]
-        holder.setData(music)
+        holder.setData(music, position)
     }
 
     override fun getItemCount(): Int {

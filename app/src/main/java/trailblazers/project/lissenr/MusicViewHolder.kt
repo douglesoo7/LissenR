@@ -22,12 +22,12 @@ class MusicViewHolder(itemView: View, private val itemClickListener: ItemClickLi
         mImg = itemView.findViewById(R.id.Img1)
     }
 
-    fun setData(music: MusicModel) {
+    fun setData(music: MusicModel, position : Int) {
         mname!!.setText(music.msong)
         mduration!!.text = music.artist
         mImg!!.setImageResource(music.mImg)
         itemView.setOnClickListener {
-            itemClickListener.onclicked(music)
+            itemClickListener.onclicked(music, position)
         }
     }
 

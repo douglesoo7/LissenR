@@ -70,19 +70,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/ivSongImage"
-        android:layout_margin="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="50dp"
         android:background="#07182c"
-        android:src="@drawable/ic_baseline_fast_rewind_24" />
+        android:src="@drawable/ic_baseline_skip_previous_24" />
 
     <ImageButton
-        android:id="@+id/btnNextt"
+        android:id="@+id/btnNext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/ivSongImage"
-        android:layout_margin="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="50dp"
         android:layout_toEndOf="@id/btnPlay"
         android:background="#07182c"
-        android:src="@drawable/ic_baseline_fast_forward_24" />
+        android:src="@drawable/ic_baseline_skip_next_24" />
 
     <TextView
         android:id="@+id/tvStatus"
@@ -96,14 +102,40 @@
         android:visibility="invisible" />
 
     <SeekBar
+        android:id="@+id/seekBar"
         android:layout_width="match_parent"
+        android:layout_marginHorizontal="10dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btnNextt"
+        android:layout_toEndOf="@+id/tvCurrentPlayingTime"
+        android:layout_toStartOf="@+id/tvTotalPlayingTime"
+        android:layout_below="@id/btnNext"
         android:progressBackgroundTint="@color/white"
         android:progressTint="#EDE8E8" />
 
+    <TextView
+        android:id="@+id/tvCurrentPlayingTime"
+        android:layout_alignTop="@id/seekBar"
+        android:layout_alignBottom="@id/seekBar"
+        android:layout_marginStart="20dp"
+        android:text="01:20"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/tvTotalPlayingTime"
+        android:layout_alignTop="@id/seekBar"
+        android:layout_alignBottom="@id/seekBar"
+        android:layout_marginEnd="20dp"
+        android:layout_alignParentEnd="true"
+        android:text="04:36"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animationV"
+        android:visibility="invisible"
         android:layout_width="70dp"
         android:layout_height="70dp"
         app:lottie_rawRes="@raw/walking_boy"
@@ -111,6 +143,5 @@
         android:layout_centerHorizontal="true"
         app:lottie_autoPlay="false"
         app:lottie_loop="true"/>
-
 
 </RelativeLayout>
