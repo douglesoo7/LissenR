@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#281b2d"
+    android:background="#091227"
     tools:context=".MusicActivity">
 
 
@@ -12,20 +12,26 @@
         android:id="@+id/tvSongName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:background="#01080f"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="#091227"
         android:gravity="center"
         android:padding="10dp"
-        android:text="Song Name"
+        android:text="Playing Now"
         android:textColor="@color/white"
-        android:textSize="20sp"
-        app:drawableLeftCompat="@mipmap/ic_launcher_round" />
+        android:textSize="24dp"
+        app:drawableLeftCompat="@drawable/ic_baseline_arrow_back_24" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivSongImage"
         android:layout_width="196dp"
         android:layout_height="196dp"
-        android:layout_centerInParent="true"
+        android:scaleType="centerCrop"
+        android:layout_below="@id/tvSongName"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="60dp"
         android:src="@mipmap/ic_launcher"
         app:civ_border_color="#FF000000"
         app:civ_border_width="2dp" />
@@ -33,31 +39,50 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnPlay"
         style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_below="@id/tvSongName"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="420dp"
+        android:layout_marginTop="228dp"
+        android:backgroundTint="#091227"
         android:text="play"
+        android:textColor="@color/white"
+        android:textSize="16dp"
         app:cornerRadius="48dp" />
+
+    <TextView
+        android:id="@+id/SongName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnPlay"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:gravity="center"
+        android:text="Song Name"
+        android:textColor="@color/white"
+        android:textSize="24dp" />
 
     <ImageButton
         android:id="@+id/btnPrev"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/ivSongImage"
-        android:layout_margin="60dp"
+        android:layout_margin="50dp"
         android:background="#07182c"
-        android:src="@drawable/ic_previous" />
+        android:src="@drawable/ic_baseline_fast_rewind_24" />
 
     <ImageButton
         android:id="@+id/btnNextt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/ivSongImage"
-        android:layout_margin="60dp"
+        android:layout_margin="50dp"
         android:layout_toEndOf="@id/btnPlay"
         android:background="#07182c"
-        android:src="@drawable/ic__nextbtn" />
+        android:src="@drawable/ic_baseline_fast_forward_24" />
 
     <TextView
         android:id="@+id/tvStatus"
@@ -69,5 +94,23 @@
         android:text="walking..."
         android:textColor="@color/white"
         android:visibility="invisible" />
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnNextt"
+        android:progressBackgroundTint="@color/white"
+        android:progressTint="#EDE8E8" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animationV"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:lottie_rawRes="@raw/walking_boy"
+        android:layout_below="@id/SongName"
+        android:layout_centerHorizontal="true"
+        app:lottie_autoPlay="false"
+        app:lottie_loop="true"/>
+
 
 </RelativeLayout>

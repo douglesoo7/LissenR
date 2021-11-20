@@ -11,10 +11,15 @@ import android.os.Binder
 import android.os.IBinder
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.airbnb.lottie.LottieAnimationView
+import com.airbnb.lottie.LottieDrawable
+import com.airbnb.lottie.LottieListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonDisposableHandle.parent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -29,6 +34,8 @@ class MusicService : Service(), SensorEventListener {
     override fun onCreate() {
         super.onCreate()
         mediaPlayer = MediaPlayer.create(this, R.raw.sunflower)
+        var view=View(this@MusicService)
+        val men=view.findViewById<LottieAnimationView>(R.id.animationV)
         sensorSetup()
         CoroutineScope(Dispatchers.IO).launch {
             while (true) {
@@ -49,10 +56,14 @@ class MusicService : Service(), SensorEventListener {
                         Log.d("KunalService", "Idle")
                         LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
                             pause()
+
                     }
                 }
             }
         }
+
+
+
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

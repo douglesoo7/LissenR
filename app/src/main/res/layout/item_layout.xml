@@ -2,23 +2,26 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/Card"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_width="180dp"
+    android:layout_height="180dp"
+    android:layout_margin="20dp"
     app:cardCornerRadius="20dp">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/Linear"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/black"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:background="#091227"
         android:orientation="vertical"
         android:padding="10dp">
 
+
         <ImageView
             android:id="@+id/Img1"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="100dp"
+            android:layout_height="95dp"
+            android:scaleType="fitXY"
+            android:layout_gravity="center"
             android:src="@drawable/maldives_2" />
 
         <TextView
@@ -38,12 +41,12 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/Sname"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="4dp"
             android:layout_toEndOf="@id/Img1"
-            android:text="Song duration"
+            android:text="Song artist"
             android:textColor="@color/white"
             android:textSize="15dp" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>

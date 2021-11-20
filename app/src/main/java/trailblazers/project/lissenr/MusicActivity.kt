@@ -50,7 +50,7 @@ class MusicActivity : AppCompatActivity() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 Log.d("KunalActivity", "msg")
                 val Status = intent?.getStringExtra("status")
-                if (Status.equals("Walking")) {
+                if (Status!!.equals("Walking")) {
                     Log.d("KunalActivity", "walking")
                     if (tvStatus.visibility != View.VISIBLE)
                         tvStatus.visibility = View.VISIBLE
@@ -72,7 +72,7 @@ class MusicActivity : AppCompatActivity() {
     }
 
     fun setViews() {
-        tvSongName.text = songName
+        SongName.text = songName
         ivSongImage.setImageResource(image!!)
     }
 

@@ -3,6 +3,7 @@ package trailblazers.project.lissenr
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.ArrayList
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
 
     fun buildrecyclerview() {
         val musicAdopter = MusicAdapter(musicArrayList, this)
-        val linearLayoutManager = LinearLayoutManager(this)
+        val linearLayoutManager = GridLayoutManager(this,2)
         recyclerView!!.layoutManager = linearLayoutManager
         recyclerView!!.adapter = musicAdopter
     }
@@ -31,8 +32,11 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
 
     fun buildData() {
         musicArrayList = ArrayList()
-        musicArrayList.add(MusicModel("calii", "Eminem", R.drawable.maldives_2, R.raw.calii))
+        musicArrayList.add(MusicModel("calii", "Eminem", R.drawable.wallpic, R.raw.calii))
         musicArrayList.add(MusicModel("down for you", "Raftaar", R.drawable.panda, R.raw.down))
+        musicArrayList.add(MusicModel("panda", "G-Easy", R.drawable.epic, R.raw.panda))
+        musicArrayList.add(MusicModel("epic", "Shawn", R.drawable.ambient, R.raw.epic))
+        musicArrayList.add(MusicModel("ambient", "Ariana", R.drawable.calii, R.raw.ambient))
         musicArrayList.add(MusicModel("panda", "G-Easy", R.drawable.epic, R.raw.panda))
         musicArrayList.add(MusicModel("epic", "Shawn", R.drawable.ambient, R.raw.epic))
         musicArrayList.add(MusicModel("ambient", "Ariana", R.drawable.calii, R.raw.ambient))
