@@ -29,7 +29,7 @@ class MusicActivity : AppCompatActivity() {
     var songName: String? = null
     var songPosition: Int = -1
     private var musicService: MusicService? = null
-    lateinit var broadcastReceiver: BroadcastReceiver
+//    lateinit var broadcastReceiver: BroadcastReceiver
     val handler = Handler()
 
     companion object {
@@ -136,6 +136,6 @@ class MusicActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(broadcastReceiver)
+//        unregisterReceiver(broadcastReceiver)
     }
 }

@@ -3,6 +3,9 @@
     package="trailblazers.project.lissenr">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -13,6 +16,7 @@
         <service
             android:name=".MusicService"
             android:enabled="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true"/>
         <activity
             android:name=".MusicActivity"
