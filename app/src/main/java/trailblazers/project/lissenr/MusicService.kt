@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 class MusicService : Service(), SensorEventListener {
 
@@ -88,7 +89,7 @@ class MusicService : Service(), SensorEventListener {
                 val newSides = event.values[0].toDouble()
                 val newUpdown = event.values[1].toDouble()
 
-                if (newSides == sides && newUpdown == updown) {
+                if (abs(newSides - sides) <= .2 && abs(newUpdown - updown) <= .2) {
 //                    Log.d(
 //                        "Kunal", "oldside: $sides  newSide:$newSides\n" +
 //                                "oldupDown: $updown  newUpdown: $newUpdown "

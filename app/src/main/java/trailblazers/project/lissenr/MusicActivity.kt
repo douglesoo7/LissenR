@@ -43,7 +43,9 @@ class MusicActivity : AppCompatActivity() {
     }
 
     private fun receiveSensorUpdates() {
+        Log.d("KunalActivity", "receiveSensorUpdates")
         val intentFilter = IntentFilter("trailblazers.project.lissenr")
+
         broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 Log.d("KunalActivity", "msg")
