@@ -38,10 +38,8 @@ class MusicService : Service(), SensorEventListener {
     var currentlyWalking = false
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-
     override fun onCreate() {
         super.onCreate()
-
         mediaPlayer = MediaPlayer.create(this, R.raw.sunflower)
         var view=View(this@MusicService)
         val men=view.findViewById<LottieAnimationView>(R.id.animationV)
@@ -55,7 +53,7 @@ class MusicService : Service(), SensorEventListener {
                         intent.putExtra("status", "Walking")
                         Log.d("KunalService", "walking")
                         LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
-                        play()
+                            play()
                     }
                 } else {
                     if (currentlyWalking) {
@@ -64,7 +62,7 @@ class MusicService : Service(), SensorEventListener {
                         intent.putExtra("status", "Idle")
                         Log.d("KunalService", "Idle")
                         LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
-                        pause()
+                            pause()
 
                     }
                 }
@@ -76,9 +74,8 @@ class MusicService : Service(), SensorEventListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             showNotificationAndStartForeGround()
         } else {
-            startForeground(1, Notification())
+            startForeground(2, Notification())
         }
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -131,6 +128,7 @@ class MusicService : Service(), SensorEventListener {
             get() = this@MusicService
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onSensorChanged(event: SensorEvent?) {
         if (event?.sensor?.type == Sensor.TYPE_ACCELEROMETER) {
             val sides = event.values[0].toDouble()
@@ -148,6 +146,7 @@ class MusicService : Service(), SensorEventListener {
                     isSensorChangeCalled = false
                 } else {
                     isSensorChangeCalled = true
+
                 }
             }
         }

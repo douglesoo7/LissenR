@@ -68,7 +68,6 @@ class MusicActivity : AppCompatActivity() {
                 }
                 handler.postDelayed(this, 1000)
             }
-
         })
     }
 
