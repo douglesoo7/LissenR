@@ -21,7 +21,7 @@ import trailblazers.project.lissenr.MusicService.ServiceBinder
 import java.util.ArrayList
 
 
-class MusicActivity : AppCompatActivity() {
+class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
 
     var image: Int? = null
     var song: Int? = null
@@ -29,8 +29,10 @@ class MusicActivity : AppCompatActivity() {
     var songName: String? = null
     var songPosition: Int = -1
     private var musicService: MusicService? = null
-    lateinit var broadcastReceiver: BroadcastReceiver
     val handler = Handler()
+    var playThread :Thread ? = null
+    var prevThread :Thread ? = null
+    var nextThread :Thread ? = null
 
     companion object {
         var songList = ArrayList<MusicModel>()
@@ -72,6 +74,127 @@ class MusicActivity : AppCompatActivity() {
         })
     }
 
+    override fun onResume() {
+        playThreadBtn()
+        prevThreadBtn()
+        nextThreadBtn()
+        super.onResume()
+    }
+
+    private fun nextThreadBtn() {
+        nextThread = object : Thread() {
+            override fun run() {
+                super.run()
+                btnNext.setOnClickListener {
+                    nextBtnClicked()
+                }
+            }
+        }
+        nextThread!!.start()
+    }
+
+    private fun nextBtnClicked() {
+        if (mediaPlayer!!.isPlaying){
+            mediaPlayer!!.stop()
+            mediaPlayer!!.release()
+            songPosition = ((songPosition+1) % songList.size)
+            song = songList[songPosition].msong
+            mediaPlayer = MediaPlayer.create(this, song!!)
+            songName = songList[songPosition].mName
+            image = songList[songPosition].mImg
+            setViews()
+            seekBar.max = mediaPlayer!!.duration/1000;
+            changeDurationPlayed()
+            btnPlay.text = "Pause"
+            mediaPlayer!!.setOnCompletionListener(this)
+            mediaPlayer!!.start()
+        } else{
+            mediaPlayer!!.stop()
+            mediaPlayer!!.release()
+            songPosition = ((songPosition+1) % songList.size)
+            song = songList[songPosition].msong
+            mediaPlayer = MediaPlayer.create(this, song!!)
+            songName = songList[songPosition].mName
+            image = songList[songPosition].mImg
+            setViews()
+            seekBar.max = mediaPlayer!!.duration/1000;
+            changeDurationPlayed()
+            btnPlay.text = "Play"
+            mediaPlayer!!.setOnCompletionListener(this)
+        }
+    }
+
+    private fun prevThreadBtn() {
+        prevThread = object : Thread() {
+            override fun run() {
+                super.run()
+                btnPrev.setOnClickListener {
+                    prevBtnClicked()
+                }
+            }
+        }
+        prevThread!!.start()
+    }
+
+    private fun prevBtnClicked() {
+        if (mediaPlayer!!.isPlaying){
+            mediaPlayer!!.stop()
+            mediaPlayer!!.release()
+            songPosition = if (songPosition - 1 < 0) songList.size - 1 else songPosition - 1
+            song = songList[songPosition].msong
+            mediaPlayer = MediaPlayer.create(this, song!!)
+            songName = songList[songPosition].mName
+            image = songList[songPosition].mImg
+            setViews()
+            seekBar.max = mediaPlayer!!.duration/1000;
+            changeDurationPlayed()
+            btnPlay.text = "Pause"
+            mediaPlayer!!.start()
+            mediaPlayer!!.setOnCompletionListener(this)
+        } else{
+            mediaPlayer!!.stop()
+            mediaPlayer!!.release()
+            songPosition = if (songPosition - 1 < 0) songList.size - 1 else songPosition - 1
+            song = songList[songPosition].msong
+            mediaPlayer = MediaPlayer.create(this, song!!)
+            songName = songList[songPosition].mName
+            image = songList[songPosition].mImg
+            setViews()
+            seekBar.max = mediaPlayer!!.duration/1000;
+            changeDurationPlayed()
+            btnPlay.text = "Play"
+            mediaPlayer!!.setOnCompletionListener(this)
+        }
+    }
+
+    private fun playThreadBtn() {
+        playThread = object : Thread() {
+            override fun run() {
+                super.run()
+                btnPlay.setOnClickListener {
+                    playBtnClicked()
+                }
+            }
+        }
+        playThread!!.start()
+    }
+
+    private fun playBtnClicked() {
+        if (mediaPlayer!!.isPlaying){
+            btnPlay.text = "Play"
+            mediaPlayer!!.pause()
+            seekBar.max = mediaPlayer!!.duration/1000;
+            changeDurationPlayed()
+            mediaPlayer!!.setOnCompletionListener(this)
+        } else{
+            btnPlay.text = "Pause"
+            mediaPlayer!!.start()
+            seekBar.max = mediaPlayer!!.duration/1000;
+            changeDurationPlayed()
+            mediaPlayer!!.setOnCompletionListener(this)
+        }
+    }
+
     private fun formattedTime(mCurrentPosition: Int): String {
         var totalOut = ""
         var totalNew = ""
@@ -107,7 +230,6 @@ class MusicActivity : AppCompatActivity() {
         songPosition = intent.getIntExtra("songPosition", -1)
         songList = musicArrayList
         if (songList != null) {
-            btnPlay.text = "Pause"
             song = songList[songPosition].msong
         }
         image = intent.getIntExtra("image", 0)
@@ -117,25 +239,34 @@ class MusicActivity : AppCompatActivity() {
             mediaPlayer!!.stop()
             mediaPlayer!!.release()
             mediaPlayer = MediaPlayer.create(applicationContext, song!!)
-            mediaPlayer!!.start()
+//            mediaPlayer!!.start()
+            seekBar.max = mediaPlayer!!.duration/1000;
         } else {
             mediaPlayer = MediaPlayer.create(applicationContext, song!!)
-            mediaPlayer!!.start()
+//            mediaPlayer!!.start()
             seekBar.max = mediaPlayer!!.duration / 1000
         }
     }
 
     fun setViews() {
         SongName.text = songName
+        tvSongName.text = songName
         ivSongImage.setImageResource(image!!)
         if (mediaPlayer != null) {
             tvTotalPlayingTime.text = formattedTime(mediaPlayer!!.duration/1000)
         }
-
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(broadcastReceiver)
+    }
+
+    override fun onCompletion(mp: MediaPlayer?) {
+        nextBtnClicked()
+        if (mediaPlayer != null){
+            mediaPlayer = MediaPlayer.create(applicationContext, song!!)
+            mediaPlayer!!.start()
+            mediaPlayer!!.setOnCompletionListener(this)
+        }
     }
 }
