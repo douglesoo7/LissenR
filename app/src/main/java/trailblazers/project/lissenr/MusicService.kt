@@ -1,5 +1,6 @@
 package trailblazers.project.lissenr
 
+import android.app.Notification
 import android.app.Service
 import android.content.Intent
 import android.hardware.Sensor
@@ -8,9 +9,11 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.media.MediaPlayer
 import android.os.Binder
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.airbnb.lottie.LottieAnimationView
 import kotlinx.coroutines.CoroutineScope
@@ -21,17 +24,24 @@ import trailblazers.project.lissenr.MusicActivity.Companion.songList
 import java.net.URI
 import java.util.ArrayList
 import kotlin.math.abs
+import androidx.core.app.NotificationCompat
+import android.app.NotificationManager
+
+import android.app.NotificationChannel
+import android.content.Context
+import android.graphics.Color
+
 
 class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionListener {
     private var mediaPlayer: MediaPlayer? = null
     private lateinit var sensorManager: SensorManager
     var isSensorChangeCalled = false
     var currentlyWalking = false
-    var mBinder = ServiceBinder()
     var uri: Int? = null
     var musicFiles = ArrayList<MusicModel>()
     var position: Int = -1
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreate() {
         super.onCreate()
 //        sensorSetup()
@@ -58,6 +68,34 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
 //                }
 //            }
 //        }
+        Log.d("umang", "onCreate")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            showNotificationAndStartForeGround()
+        } else {
+            startForeground(2, Notification())
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun showNotificationAndStartForeGround() {
+        val NOTIFICATION_CHANNEL_ID = "lloyd"
+        val channelName = "Background Service"
+        val chan = NotificationChannel(
+            NOTIFICATION_CHANNEL_ID,
+            channelName,
+            NotificationManager.IMPORTANCE_NONE
+        )
+        chan.lightColor = Color.BLUE
+        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        assert(manager != null)
+        manager.createNotificationChannel(chan)
+        val notificationBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+        val notification = notificationBuilder.setOngoing(true)
+            .setContentTitle("App is running in background")
+            .setPriority(NotificationManager.IMPORTANCE_MIN)
+            .setCategory(Notification.CATEGORY_SERVICE)
+            .build()
+        startForeground(2, notification)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -181,7 +219,7 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
                 val newUpdown = event.values[1].toDouble()
 
                 isSensorChangeCalled =
-                    !(abs(newSides - sides) <= 0.3 && abs(newUpdown - updown) <= 0.3)
+                    !(abs(newSides - sides) <= 0.8 && abs(newUpdown - updown) <= 0.8)
             }
         }
     }
@@ -189,5 +227,8 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
 
     }
+
+
+
 
 }
