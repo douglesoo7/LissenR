@@ -39,6 +39,8 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
 
         seekBarChange()
         changeDurationPlayed()
+
+
     }
 
     private fun changeDurationPlayed() {
