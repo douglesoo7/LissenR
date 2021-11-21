@@ -4,25 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#BAB9BA"
     android:orientation="vertical"
-    android:background="#091227"
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/Heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="LissenR"
-        android:textColor="@color/white"
         android:layout_gravity="center"
+        android:fontFamily="@font/commissioner_bold"
         android:gravity="center"
-        android:textSize="23dp"
-        android:id="@+id/Heading"
-        />
+        android:text="LissenR"
+        android:textSize="23dp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
         android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

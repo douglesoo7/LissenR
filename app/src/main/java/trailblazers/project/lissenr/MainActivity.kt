@@ -4,14 +4,16 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.ArrayList
 
 class MainActivity : AppCompatActivity(), ItemClickListener {
 
-    companion object{
+    companion object {
         var musicArrayList = ArrayList<MusicModel>()
     }
+
     var recyclerView: RecyclerView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +27,7 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
 
     fun buildrecyclerview() {
         val musicAdopter = MusicAdapter(musicArrayList, this)
-        val linearLayoutManager = GridLayoutManager(this,2)
+        val linearLayoutManager = LinearLayoutManager(this)
         recyclerView!!.layoutManager = linearLayoutManager
         recyclerView!!.adapter = musicAdopter
     }
@@ -43,7 +45,7 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
         musicArrayList.add(MusicModel("ambient", "Ariana", R.drawable.calii, R.raw.ambient))
     }
 
-    override fun onclicked(music: MusicModel?, position : Int) {
+    override fun onclicked(music: MusicModel?, position: Int) {
         val intent = Intent(this, MusicActivity::class.java)
         intent.putExtra("music", music!!.msong)
         intent.putExtra("image", music.mImg)
