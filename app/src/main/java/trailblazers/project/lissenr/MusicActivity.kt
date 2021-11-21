@@ -6,18 +6,9 @@ import android.os.Bundle
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.IBinder
-import android.util.Log
-import android.view.View
-import android.widget.Button
 import android.widget.SeekBar
-import androidx.annotation.MainThread
 import kotlinx.android.synthetic.main.activity_music.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import trailblazers.project.lissenr.MainActivity.Companion.musicArrayList
-import trailblazers.project.lissenr.MusicService.ServiceBinder
 import java.util.ArrayList
 
 
@@ -271,9 +262,12 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
             if (!btnTrackingStatus) {
                 btnTracking.setImageResource(R.drawable.ic_accessibility_checked)
                 btnTrackingStatus = true;
+
+                musicService!!.trackingEnabled()
             }
             else{
                 btnTracking.setImageResource(R.drawable.ic_accessibility_unchecked)
+                musicService!!.trackingDisabled()
                 btnTrackingStatus = false;
             }
         }

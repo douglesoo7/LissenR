@@ -31,6 +31,7 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
     var uri: Int? = null
     var musicFiles = ArrayList<MusicModel>()
     var position: Int = -1
+    var trackingEnabled = false;
 
     override fun onCreate() {
         super.onCreate()
@@ -68,20 +69,22 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
         sensorSetup()
         CoroutineScope(Dispatchers.IO).launch {
             while (true) {
-                if (isSensorChangeCalled) {
-                    if (!currentlyWalking) {
-                        currentlyWalking = true
-                        Log.d("KunalService", "walking")
-                        if (!isPlaying()) {
-                            start()
+                if (trackingEnabled) {
+                    if (isSensorChangeCalled) {
+                        if (!currentlyWalking) {
+                            currentlyWalking = true
+                            Log.d("KunalService", "walking")
+                            if (!isPlaying()) {
+                                start()
+                            }
                         }
-                    }
-                } else {
-                    if (currentlyWalking) {
-                        currentlyWalking = false
-                        Log.d("KunalService", "Idle")
-                        if (isPlaying()) {
-                            pause()
+                    } else {
+                        if (currentlyWalking) {
+                            currentlyWalking = false
+                            Log.d("KunalService", "Idle")
+                            if (isPlaying()) {
+                                pause()
+                            }
                         }
                     }
                 }
@@ -188,6 +191,14 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
 
+    }
+
+    fun trackingEnabled() {
+        trackingEnabled = true;
+    }
+
+    fun trackingDisabled() {
+        trackingEnabled=false
     }
 
 }
