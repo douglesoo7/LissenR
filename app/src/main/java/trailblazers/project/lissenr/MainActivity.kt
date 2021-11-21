@@ -35,14 +35,14 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
 
     fun buildData() {
         musicArrayList = ArrayList()
-        musicArrayList.add(MusicModel("calii", "Eminem", R.drawable.wallpic, R.raw.calii))
-        musicArrayList.add(MusicModel("down for you", "Raftaar", R.drawable.panda, R.raw.down))
-        musicArrayList.add(MusicModel("panda", "G-Easy", R.drawable.epic, R.raw.panda))
-        musicArrayList.add(MusicModel("epic", "Shawn", R.drawable.ambient, R.raw.epic))
-        musicArrayList.add(MusicModel("ambient", "Ariana", R.drawable.calii, R.raw.ambient))
-        musicArrayList.add(MusicModel("panda", "G-Easy", R.drawable.epic, R.raw.panda))
-        musicArrayList.add(MusicModel("epic", "Shawn", R.drawable.ambient, R.raw.epic))
-        musicArrayList.add(MusicModel("ambient", "Ariana", R.drawable.calii, R.raw.ambient))
+        musicArrayList.add(MusicModel("Calii", "Eminem", R.drawable.calii, R.raw.calii))
+        musicArrayList.add(MusicModel("Down for you", "Post Malone", R.drawable.down, R.raw.down))
+        musicArrayList.add(MusicModel("Panda", "G-Easy", R.drawable.panda, R.raw.panda))
+        musicArrayList.add(MusicModel("Epic", "Shawn", R.drawable.epic, R.raw.epic))
+        musicArrayList.add(MusicModel("Ambient", "Ariana", R.drawable.ambient, R.raw.ambient))
+        musicArrayList.add(MusicModel("Panda", "G-Easy", R.drawable.panda, R.raw.panda))
+        musicArrayList.add(MusicModel("Epic", "Shawn", R.drawable.epic, R.raw.epic))
+        musicArrayList.add(MusicModel("Ambient", "Ariana", R.drawable.ambient, R.raw.ambient))
     }
 
     override fun onclicked(music: MusicModel?, position: Int) {
