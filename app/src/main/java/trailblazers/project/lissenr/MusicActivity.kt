@@ -24,6 +24,7 @@ import java.util.ArrayList
 class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, MusicPlayerListener,
     ServiceConnection {
 
+    var btnTrackingStatus = false;
     var image: Int? = null
     var song: Int? = null
     var artist: String? = null
@@ -47,8 +48,6 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
 
         seekBarChange()
         changeDurationPlayed()
-
-
     }
 
     private fun changeDurationPlayed() {
@@ -262,10 +261,22 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
     }
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+
         val serviceBinder = service as MusicService.ServiceBinder
         musicService = serviceBinder.musicService
         seekBar.max = musicService!!.getDuration() / 1000
         setViews()
+
+        btnTracking.setOnClickListener {
+            if (!btnTrackingStatus) {
+                btnTracking.setImageResource(R.drawable.ic_accessibility_checked)
+                btnTrackingStatus = true;
+            }
+            else{
+                btnTracking.setImageResource(R.drawable.ic_accessibility_unchecked)
+                btnTrackingStatus = false;
+            }
+        }
     }
 
     override fun onServiceDisconnected(p0: ComponentName?) {
