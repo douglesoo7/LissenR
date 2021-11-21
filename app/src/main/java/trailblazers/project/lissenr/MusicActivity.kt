@@ -21,7 +21,8 @@ import trailblazers.project.lissenr.MusicService.ServiceBinder
 import java.util.ArrayList
 
 
-class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
+class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, MusicPlayerListener,
+    ServiceConnection {
 
     var image: Int? = null
     var song: Int? = null
@@ -30,32 +31,20 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
     var songPosition: Int = -1
     private var musicService: MusicService? = null
     val handler = Handler()
-    var playThread :Thread ? = null
-    var prevThread :Thread ? = null
-    var nextThread :Thread ? = null
+    var playThread: Thread? = null
+    var prevThread: Thread? = null
+    var nextThread: Thread? = null
 
     companion object {
         var songList = ArrayList<MusicModel>()
-        var mediaPlayer: MediaPlayer? = null
-    }
-
-
-    private val serviceConnection: ServiceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName, binder: IBinder) {
-            val serviceBinder = binder as ServiceBinder
-            musicService = serviceBinder.musicService
-        }
-
-        override fun onServiceDisconnected(name: ComponentName) {}
+//        var mediaPlayer: MediaPlayer? = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_music)
         getIntentMethod()
-        setViews()
-        val intent = Intent(this, MusicService::class.java)
-        bindService(intent, serviceConnection, BIND_AUTO_CREATE)
+
         seekBarChange()
         changeDurationPlayed()
     }
@@ -63,8 +52,8 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
     private fun changeDurationPlayed() {
         this@MusicActivity.runOnUiThread(object : Runnable {
             override fun run() {
-                if (mediaPlayer != null) {
-                    val mCurrentPosition = mediaPlayer!!.currentPosition / 1000
+                if (musicService != null) {
+                    val mCurrentPosition = musicService!!.getCurrentPosition() / 1000
                     seekBar.progress = mCurrentPosition
                     tvCurrentPlayingTime.text = formattedTime(mCurrentPosition)
                 }
@@ -75,10 +64,17 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
     }
 
     override fun onResume() {
+        val intent = Intent(this, MusicService::class.java)
+        bindService(intent, this, BIND_AUTO_CREATE)
         playThreadBtn()
         prevThreadBtn()
         nextThreadBtn()
         super.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unbindService(this)
     }
 
     private fun nextThreadBtn() {
@@ -93,34 +89,34 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
         nextThread!!.start()
     }
 
-    private fun nextBtnClicked() {
-        if (mediaPlayer!!.isPlaying){
-            mediaPlayer!!.stop()
-            mediaPlayer!!.release()
-            songPosition = ((songPosition+1) % songList.size)
+    override fun nextBtnClicked() {
+        if (musicService!!.isPlaying()) {
+            musicService!!.stop()
+            musicService!!.release()
+            songPosition = ((songPosition + 1) % songList.size)
             song = songList[songPosition].msong
-            mediaPlayer = MediaPlayer.create(this, song!!)
+            musicService!!.createMediaPlayer(songPosition)
             songName = songList[songPosition].mName
             image = songList[songPosition].mImg
             setViews()
-            seekBar.max = mediaPlayer!!.duration/1000;
+            seekBar.max = musicService!!.getDuration() / 1000;
             changeDurationPlayed()
             btnPlay.text = "Pause"
-            mediaPlayer!!.setOnCompletionListener(this)
-            mediaPlayer!!.start()
-        } else{
-            mediaPlayer!!.stop()
-            mediaPlayer!!.release()
-            songPosition = ((songPosition+1) % songList.size)
+            musicService!!.onComplete()
+            musicService!!.start()
+        } else {
+            musicService!!.stop()
+            musicService!!.release()
+            songPosition = ((songPosition + 1) % songList.size)
             song = songList[songPosition].msong
-            mediaPlayer = MediaPlayer.create(this, song!!)
+            musicService!!.createMediaPlayer(songPosition)
             songName = songList[songPosition].mName
             image = songList[songPosition].mImg
             setViews()
-            seekBar.max = mediaPlayer!!.duration/1000;
+            seekBar.max = musicService!!.getDuration() / 1000;
             changeDurationPlayed()
             btnPlay.text = "Play"
-            mediaPlayer!!.setOnCompletionListener(this)
+            musicService!!.onComplete()
         }
     }
 
@@ -136,34 +132,34 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
         prevThread!!.start()
     }
 
-    private fun prevBtnClicked() {
-        if (mediaPlayer!!.isPlaying){
-            mediaPlayer!!.stop()
-            mediaPlayer!!.release()
+    override fun prevBtnClicked() {
+        if (musicService!!.isPlaying()) {
+            musicService!!.stop()
+            musicService!!.release()
             songPosition = if (songPosition - 1 < 0) songList.size - 1 else songPosition - 1
             song = songList[songPosition].msong
-            mediaPlayer = MediaPlayer.create(this, song!!)
+            musicService!!.createMediaPlayer(songPosition)
             songName = songList[songPosition].mName
             image = songList[songPosition].mImg
             setViews()
-            seekBar.max = mediaPlayer!!.duration/1000;
+            seekBar.max = musicService!!.getDuration() / 1000;
             changeDurationPlayed()
             btnPlay.text = "Pause"
-            mediaPlayer!!.start()
-            mediaPlayer!!.setOnCompletionListener(this)
-        } else{
-            mediaPlayer!!.stop()
-            mediaPlayer!!.release()
+            musicService!!.start()
+            musicService!!.onComplete()
+        } else {
+            musicService!!.stop()
+            musicService!!.release()
             songPosition = if (songPosition - 1 < 0) songList.size - 1 else songPosition - 1
             song = songList[songPosition].msong
-            mediaPlayer = MediaPlayer.create(this, song!!)
+            musicService!!.createMediaPlayer(songPosition)
             songName = songList[songPosition].mName
             image = songList[songPosition].mImg
             setViews()
-            seekBar.max = mediaPlayer!!.duration/1000;
+            seekBar.max = musicService!!.getDuration() / 1000;
             changeDurationPlayed()
             btnPlay.text = "Play"
-            mediaPlayer!!.setOnCompletionListener(this)
+            musicService!!.onComplete()
         }
     }
 
@@ -179,19 +175,19 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
         playThread!!.start()
     }
 
-    private fun playBtnClicked() {
-        if (mediaPlayer!!.isPlaying){
+    override fun playBtnClicked() {
+        if (musicService!!.isPlaying()) {
             btnPlay.text = "Play"
-            mediaPlayer!!.pause()
-            seekBar.max = mediaPlayer!!.duration/1000;
+            musicService!!.pause()
+            seekBar.max = musicService!!.getDuration() / 1000;
             changeDurationPlayed()
-            mediaPlayer!!.setOnCompletionListener(this)
-        } else{
+            musicService!!.onComplete()
+        } else {
             btnPlay.text = "Pause"
-            mediaPlayer!!.start()
-            seekBar.max = mediaPlayer!!.duration/1000;
+            musicService!!.start()
+            seekBar.max = musicService!!.getDuration() / 1000;
             changeDurationPlayed()
-            mediaPlayer!!.setOnCompletionListener(this)
+            musicService!!.onComplete()
         }
     }
 
@@ -212,8 +208,8 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
     private fun seekBarChange() {
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (mediaPlayer != null && fromUser) {
-                    mediaPlayer!!.seekTo(progress * 1000)
+                if (musicService != null && fromUser) {
+                    musicService!!.seekTo(progress * 1000)
                 }
             }
 
@@ -235,25 +231,18 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
         image = intent.getIntExtra("image", 0)
         artist = intent.getStringExtra("artist")
         songName = intent.getStringExtra("songName")
-        if (mediaPlayer != null) {
-            mediaPlayer!!.stop()
-            mediaPlayer!!.release()
-            mediaPlayer = MediaPlayer.create(applicationContext, song!!)
-//            mediaPlayer!!.start()
-            seekBar.max = mediaPlayer!!.duration/1000;
-        } else {
-            mediaPlayer = MediaPlayer.create(applicationContext, song!!)
-//            mediaPlayer!!.start()
-            seekBar.max = mediaPlayer!!.duration / 1000
-        }
+
+        val intent = Intent(this, MusicService::class.java)
+        intent.putExtra("servicePosition", songPosition)
+        startService(intent)
     }
 
     fun setViews() {
         SongName.text = songName
         tvSongName.text = songName
         ivSongImage.setImageResource(image!!)
-        if (mediaPlayer != null) {
-            tvTotalPlayingTime.text = formattedTime(mediaPlayer!!.duration/1000)
+        if (musicService != null) {
+            tvTotalPlayingTime.text = formattedTime(musicService!!.getDuration() / 1000)
         }
     }
 
@@ -263,10 +252,21 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
 
     override fun onCompletion(mp: MediaPlayer?) {
         nextBtnClicked()
-        if (mediaPlayer != null){
-            mediaPlayer = MediaPlayer.create(applicationContext, song!!)
-            mediaPlayer!!.start()
-            mediaPlayer!!.setOnCompletionListener(this)
+        if (musicService != null) {
+            musicService!!.createMediaPlayer(songPosition)
+            musicService!!.start()
+            musicService!!.onComplete()
         }
+    }
+
+    override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+        val serviceBinder = service as MusicService.ServiceBinder
+        musicService = serviceBinder.musicService
+        seekBar.max = musicService!!.getDuration() / 1000
+        setViews()
+    }
+
+    override fun onServiceDisconnected(p0: ComponentName?) {
+        musicService = null
     }
 }
