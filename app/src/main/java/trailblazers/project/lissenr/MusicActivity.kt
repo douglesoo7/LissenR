@@ -47,6 +47,8 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
 
         seekBarChange()
         changeDurationPlayed()
+
+
     }
 
     private fun changeDurationPlayed() {
@@ -101,7 +103,7 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
             setViews()
             seekBar.max = musicService!!.getDuration() / 1000;
             changeDurationPlayed()
-            btnPlay.text = "Pause"
+            btnPlay.setImageResource(R.drawable.ic_pause)
             musicService!!.onComplete()
             musicService!!.start()
         } else {
@@ -115,7 +117,7 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
             setViews()
             seekBar.max = musicService!!.getDuration() / 1000;
             changeDurationPlayed()
-            btnPlay.text = "Play"
+            btnPlay.setImageResource(R.drawable.ic_play_circle)
             musicService!!.onComplete()
         }
     }
@@ -144,7 +146,7 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
             setViews()
             seekBar.max = musicService!!.getDuration() / 1000;
             changeDurationPlayed()
-            btnPlay.text = "Pause"
+            btnPlay.setImageResource(R.drawable.ic_pause)
             musicService!!.start()
             musicService!!.onComplete()
         } else {
@@ -158,7 +160,7 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
             setViews()
             seekBar.max = musicService!!.getDuration() / 1000;
             changeDurationPlayed()
-            btnPlay.text = "Play"
+            btnPlay.setImageResource(R.drawable.ic_play_circle)
             musicService!!.onComplete()
         }
     }
@@ -177,13 +179,13 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
 
     override fun playBtnClicked() {
         if (musicService!!.isPlaying()) {
-            btnPlay.text = "Play"
+            btnPlay.setImageResource(R.drawable.ic_play_circle)
             musicService!!.pause()
             seekBar.max = musicService!!.getDuration() / 1000;
             changeDurationPlayed()
             musicService!!.onComplete()
         } else {
-            btnPlay.text = "Pause"
+            btnPlay.setImageResource(R.drawable.ic_pause)
             musicService!!.start()
             seekBar.max = musicService!!.getDuration() / 1000;
             changeDurationPlayed()
@@ -238,7 +240,7 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
     }
 
     fun setViews() {
-        SongName.text = songName
+        tvSongArtist.text = artist
         tvSongName.text = songName
         ivSongImage.setImageResource(image!!)
         if (musicService != null) {
