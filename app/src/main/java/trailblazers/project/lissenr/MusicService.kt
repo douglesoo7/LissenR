@@ -225,9 +225,8 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
                 delay(3000)
                 val newSides = event.values[0].toDouble()
                 val newUpdown = event.values[1].toDouble()
-
                 isSensorChangeCalled =
-                    !(abs(newSides - sides) <= 0.3 && abs(newUpdown - updown) <= 0.3)
+                    !(abs(newSides - sides) <= .3 && abs(newUpdown - updown) <= .3)
             }
         }
     }
