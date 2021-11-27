@@ -36,4 +36,4 @@ An app that detects movement of the user and plays the media accordingly. If the
     implementation "com.airbnb.android:lottie:$lottieVersion" 
 ```
     
-<a href="https://www.buymeacoffee.com/kingbond470" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee please!" style="height: 51px !important;width: 217px !important;" ></a>
+<a href="https://www.buymeacoffee.com/douglesoo7" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee please!" style="height: 51px !important;width: 217px !important;" ></a>
