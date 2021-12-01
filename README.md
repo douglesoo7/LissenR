@@ -5,7 +5,13 @@ An app that detects movement of the user and plays the media accordingly. If the
 
 ## Screenshots
 
-![App Screenshot](https://drive.google.com/file/d/18hJF5o0z6qAbyeLNsBX5jZtJEqGbme6N/view?usp=sharing)
+<img src="https://raw.githubusercontent.com/douglesoo7/LissenR/master/LissenR%20README%20Image%201.jpg" height="512px" width="256px"/>
+
+<img src="https://raw.githubusercontent.com/douglesoo7/LissenR/master/LissenR%20README%20Image%202.jpg" height="512px" width="256px"/>
+
+<img src="https://raw.githubusercontent.com/douglesoo7/LissenR/master/LissenR%20README%20Image%204.jpg" height="512px" width="256px"/>
+
+
 
 ## Tech Stack Used:-
 
