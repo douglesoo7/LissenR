@@ -13,7 +13,7 @@ import trailblazers.project.lissenr.MainActivity.Companion.musicArrayList
 import java.util.ArrayList
 
 
-class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, MusicPlayerListener,
+class MusicActivity : AppCompatActivity(), MusicPlayerListener,
     ServiceConnection {
 
     var btnTrackingStatus = false;
@@ -245,8 +245,9 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
         super.onDestroy()
     }
 
-    override fun onCompletion(mp: MediaPlayer?) {
+    override fun onCompletion() {
         nextBtnClicked()
+        btnPlay.setImageResource(R.drawable.ic_pause)
         if (musicService != null) {
             musicService!!.createMediaPlayer(songPosition)
             musicService!!.start()
@@ -260,7 +261,7 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
         musicService = serviceBinder.musicService
         seekBar.max = musicService!!.getDuration() / 1000
         setViews()
-
+        musicService?.setCallBack(this)
         btnTracking.setOnClickListener {
             if (!btnTrackingStatus) {
                 btnTracking.setImageResource(R.drawable.ic_accessibility_checked)

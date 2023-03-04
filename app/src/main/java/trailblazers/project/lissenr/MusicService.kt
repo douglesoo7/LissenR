@@ -18,18 +18,13 @@ import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.airbnb.lottie.LottieAnimationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import trailblazers.project.lissenr.MusicActivity.Companion.songList
-import java.net.URI
-import java.util.ArrayList
 import kotlin.math.abs
 
 class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionListener {
@@ -37,11 +32,11 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
     private lateinit var sensorManager: SensorManager
     var isSensorChangeCalled = false
     var currentlyWalking = false
-    var mBinder = ServiceBinder()
     var uri: Uri? = null
     var musicFiles = ArrayList<MusicModel>()
     var position: Int = -1
-    var trackingEnabled = false;
+    var trackingEnabled = false
+    private var musicPlayerListener: MusicPlayerListener? = null
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreate() {
@@ -197,7 +192,9 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
     }
 
     override fun onCompletion(mp: MediaPlayer?) {
-
+        musicPlayerListener?.run {
+            onCompletion()
+        }
     }
 
     fun createMediaPlayer(position: Int) {
@@ -245,4 +242,7 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
         trackingEnabled = false
     }
 
+    fun setCallBack(musicPlayerListener: MusicPlayerListener) {
+        this.musicPlayerListener = musicPlayerListener
+    }
 }
