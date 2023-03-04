@@ -4,6 +4,7 @@ import android.content.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Handler
 import android.os.IBinder
 import android.widget.SeekBar
@@ -16,9 +17,9 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
     ServiceConnection {
 
     var btnTrackingStatus = false;
-    var image: Int? = null
-    var song: Int? = null
-    var artist: String? = null
+    var duration: Int? = null
+    var song: Uri? = null
+    var size: Int? = null
     var songName: String? = null
     var songPosition: Int = -1
     private var musicService: MusicService? = null
@@ -88,10 +89,10 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
             musicService!!.stop()
             musicService!!.release()
             songPosition = ((songPosition + 1) % songList.size)
-            song = songList[songPosition].msong
+            song = songList[songPosition].contentUri
             musicService!!.createMediaPlayer(songPosition)
-            songName = songList[songPosition].mName
-            image = songList[songPosition].mImg
+            songName = songList[songPosition].fileName
+            duration = songList[songPosition].duration
             setViews()
             seekBar.max = musicService!!.getDuration() / 1000;
             changeDurationPlayed()
@@ -102,10 +103,10 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
             musicService!!.stop()
             musicService!!.release()
             songPosition = ((songPosition + 1) % songList.size)
-            song = songList[songPosition].msong
+            song = songList[songPosition].contentUri
             musicService!!.createMediaPlayer(songPosition)
-            songName = songList[songPosition].mName
-            image = songList[songPosition].mImg
+            songName = songList[songPosition].fileName
+            duration = songList[songPosition].duration
             setViews()
             seekBar.max = musicService!!.getDuration() / 1000;
             changeDurationPlayed()
@@ -131,10 +132,10 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
             musicService!!.stop()
             musicService!!.release()
             songPosition = if (songPosition - 1 < 0) songList.size - 1 else songPosition - 1
-            song = songList[songPosition].msong
+            song = songList[songPosition].contentUri
             musicService!!.createMediaPlayer(songPosition)
-            songName = songList[songPosition].mName
-            image = songList[songPosition].mImg
+            songName = songList[songPosition].fileName
+            duration = songList[songPosition].duration
             setViews()
             seekBar.max = musicService!!.getDuration() / 1000;
             changeDurationPlayed()
@@ -145,10 +146,10 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
             musicService!!.stop()
             musicService!!.release()
             songPosition = if (songPosition - 1 < 0) songList.size - 1 else songPosition - 1
-            song = songList[songPosition].msong
+            song = songList[songPosition].contentUri
             musicService!!.createMediaPlayer(songPosition)
-            songName = songList[songPosition].mName
-            image = songList[songPosition].mImg
+            songName = songList[songPosition].fileName
+            duration = songList[songPosition].duration
             setViews()
             seekBar.max = musicService!!.getDuration() / 1000;
             changeDurationPlayed()
@@ -220,10 +221,10 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
         songPosition = intent.getIntExtra("songPosition", -1)
         songList = musicArrayList
         if (songList != null) {
-            song = songList[songPosition].msong
+            song = songList[songPosition].contentUri
         }
-        image = intent.getIntExtra("image", 0)
-        artist = intent.getStringExtra("artist")
+        duration = intent.getIntExtra("duration", 0)
+        size = intent.getIntExtra("size", 0)
         songName = intent.getStringExtra("songName")
 
         val intent = Intent(this, MusicService::class.java)
@@ -232,9 +233,9 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Mus
     }
 
     fun setViews() {
-        tvSongArtist.text = artist
+        tvSongSize.text = size.toString()
         tvSongName.text = songName
-        ivSongImage.setImageResource(image!!)
+//        ivSongImage.setImageResource(image!!)
         if (musicService != null) {
             tvTotalPlayingTime.text = formattedTime(musicService!!.getDuration() / 1000)
         }

@@ -1,8 +1,10 @@
 package trailblazers.project.lissenr
 
+import android.net.Uri
+
 data class MusicModel(
-    var mName: String? = null,
-    val artist: String? = null,
-    val mImg: Int = 0,
-    val msong: Int = 0
+    val contentUri: Uri?,
+    val fileName: String?,
+    val duration: Int,
+    val size: Int
 )

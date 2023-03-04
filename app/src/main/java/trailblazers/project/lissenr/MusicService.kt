@@ -13,6 +13,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
@@ -37,7 +38,7 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
     var isSensorChangeCalled = false
     var currentlyWalking = false
     var mBinder = ServiceBinder()
-    var uri: Int? = null
+    var uri: Uri? = null
     var musicFiles = ArrayList<MusicModel>()
     var position: Int = -1
     var trackingEnabled = false;
@@ -200,7 +201,7 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
     }
 
     fun createMediaPlayer(position: Int) {
-        uri = musicFiles[position].msong
+        uri = musicFiles[position].contentUri
         mediaPlayer = MediaPlayer.create(baseContext, uri!!)
     }
 
