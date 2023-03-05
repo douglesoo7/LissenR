@@ -1,12 +1,13 @@
 package trailblazers.project.lissenr
 
+import android.Manifest
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import java.util.ArrayList
+import trailblazers.project.lissenr.util.AudioScanner
 
 class MainActivity : AppCompatActivity(), ItemClickListener {
 
@@ -14,18 +15,22 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
         var musicArrayList = ArrayList<MusicModel>()
     }
 
-    var recyclerView: RecyclerView? = null
+    private var recyclerView: RecyclerView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         recyclerView = findViewById(R.id.recyclerView)
-        buildData()
-        buildrecyclerview()
+        createMusicList()
+        buildRecyclerView()
+        ActivityCompat.shouldShowRequestPermissionRationale(
+            this,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
     }
 
 
-    fun buildrecyclerview() {
+    private fun buildRecyclerView() {
         val musicAdopter = MusicAdapter(musicArrayList, this)
         val linearLayoutManager = LinearLayoutManager(this)
         recyclerView!!.layoutManager = linearLayoutManager
@@ -33,25 +38,14 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
     }
 
 
-    fun buildData() {
-        Thread(
-            Runnable {
-               val scannedMusicList = AudioScanner.scanForAudio(this)
-                musicArrayList.addAll(scannedMusicList)
-            }
-        ).start()
-//        musicArrayList = ArrayList()
-//        musicArrayList.add(MusicModel("Calii", "Eminem", R.drawable.calii, R.raw.calii))
-//        musicArrayList.add(MusicModel("Down for you", "Post Malone", R.drawable.down, R.raw.down))
-//        musicArrayList.add(MusicModel("Panda", "G-Easy", R.drawable.panda, R.raw.panda))
-//        musicArrayList.add(MusicModel("Epic", "Shawn", R.drawable.epic, R.raw.epic))
-//        musicArrayList.add(MusicModel("Ambient", "Ariana", R.drawable.ambient, R.raw.ambient))
-//        musicArrayList.add(MusicModel("Panda", "G-Easy", R.drawable.panda, R.raw.panda))
-//        musicArrayList.add(MusicModel("Epic", "Shawn", R.drawable.epic, R.raw.epic))
-//        musicArrayList.add(MusicModel("Ambient", "Ariana", R.drawable.ambient, R.raw.ambient))
+    private fun createMusicList() {
+        Thread {
+            val scannedMusicList = AudioScanner.scanForAudio(this)
+            musicArrayList.addAll(scannedMusicList)
+        }.start()
     }
 
-    override fun onclicked(music: MusicModel?, position: Int) {
+    override fun onClicked(music: MusicModel?, position: Int) {
         val intent = Intent(this, MusicActivity::class.java)
         intent.putExtra("contentUri", music?.contentUri)
         intent.putExtra("name", music?.fileName)

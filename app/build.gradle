@@ -52,4 +52,15 @@ dependencies {
     def lottieVersion = "3.4.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
 
+    def activity_version = "1.6.1"
+    // Kotlin
+    implementation "androidx.activity:activity-ktx:$activity_version"
+
+    def fragment_version = "1.5.5"
+
+    // Kotlin
+    implementation "androidx.fragment:fragment-ktx:$fragment_version"
+    // Testing Fragments in Isolation
+    debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
+
 }

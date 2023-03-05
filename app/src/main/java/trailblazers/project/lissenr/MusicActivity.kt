@@ -3,7 +3,6 @@ package trailblazers.project.lissenr
 import android.content.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Handler
 import android.os.IBinder
@@ -16,21 +15,21 @@ import java.util.ArrayList
 class MusicActivity : AppCompatActivity(), MusicPlayerListener,
     ServiceConnection {
 
-    var btnTrackingStatus = false;
-    var duration: Int? = null
-    var song: Uri? = null
-    var size: Int? = null
-    var songName: String? = null
-    var songPosition: Int = -1
+    private var btnTrackingStatus = false
+    private var duration: Int? = null
+    private var song: Uri? = null
+    private var size: Int? = null
+    private var songName: String? = null
+    private var songPosition: Int = -1
     private var musicService: MusicService? = null
+    @Suppress("DEPRECATION")
     val handler = Handler()
-    var playThread: Thread? = null
-    var prevThread: Thread? = null
-    var nextThread: Thread? = null
+    private var playThread: Thread? = null
+    private var prevThread: Thread? = null
+    private var nextThread: Thread? = null
 
     companion object {
         var songList = ArrayList<MusicModel>()
-//        var mediaPlayer: MediaPlayer? = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,7 +93,7 @@ class MusicActivity : AppCompatActivity(), MusicPlayerListener,
             songName = songList[songPosition].fileName
             duration = songList[songPosition].duration
             setViews()
-            seekBar.max = musicService!!.getDuration() / 1000;
+            seekBar.max = musicService!!.getDuration() / 1000
             changeDurationPlayed()
             btnPlay.setImageResource(R.drawable.ic_pause)
             musicService!!.onComplete()
@@ -108,7 +107,7 @@ class MusicActivity : AppCompatActivity(), MusicPlayerListener,
             songName = songList[songPosition].fileName
             duration = songList[songPosition].duration
             setViews()
-            seekBar.max = musicService!!.getDuration() / 1000;
+            seekBar.max = musicService!!.getDuration() / 1000
             changeDurationPlayed()
             btnPlay.setImageResource(R.drawable.ic_play_circle)
             musicService!!.onComplete()
@@ -137,7 +136,7 @@ class MusicActivity : AppCompatActivity(), MusicPlayerListener,
             songName = songList[songPosition].fileName
             duration = songList[songPosition].duration
             setViews()
-            seekBar.max = musicService!!.getDuration() / 1000;
+            seekBar.max = musicService!!.getDuration() / 1000
             changeDurationPlayed()
             btnPlay.setImageResource(R.drawable.ic_pause)
             musicService!!.start()
@@ -151,7 +150,7 @@ class MusicActivity : AppCompatActivity(), MusicPlayerListener,
             songName = songList[songPosition].fileName
             duration = songList[songPosition].duration
             setViews()
-            seekBar.max = musicService!!.getDuration() / 1000;
+            seekBar.max = musicService!!.getDuration() / 1000
             changeDurationPlayed()
             btnPlay.setImageResource(R.drawable.ic_play_circle)
             musicService!!.onComplete()
@@ -174,30 +173,26 @@ class MusicActivity : AppCompatActivity(), MusicPlayerListener,
         if (musicService!!.isPlaying()) {
             btnPlay.setImageResource(R.drawable.ic_play_circle)
             musicService!!.pause()
-            seekBar.max = musicService!!.getDuration() / 1000;
+            seekBar.max = musicService!!.getDuration() / 1000
             changeDurationPlayed()
             musicService!!.onComplete()
         } else {
             btnPlay.setImageResource(R.drawable.ic_pause)
             musicService!!.start()
-            seekBar.max = musicService!!.getDuration() / 1000;
+            seekBar.max = musicService!!.getDuration() / 1000
             changeDurationPlayed()
             musicService!!.onComplete()
         }
     }
 
     private fun formattedTime(mCurrentPosition: Int): String {
-        var totalOut = ""
-        var totalNew = ""
-        var seconds = (mCurrentPosition % 60).toString()
-        var minutes = (mCurrentPosition / 60).toString()
+        val totalOut: String
+        val totalNew: String
+        val seconds = (mCurrentPosition % 60).toString()
+        val minutes = (mCurrentPosition / 60).toString()
         totalOut = "$minutes:$seconds"
         totalNew = "$minutes:0$seconds"
-        if (seconds.length == 1) {
-            return totalNew
-        } else {
-            return totalOut
-        }
+        return if (seconds.length == 1) totalNew else totalOut
     }
 
     private fun seekBarChange() {
@@ -220,9 +215,7 @@ class MusicActivity : AppCompatActivity(), MusicPlayerListener,
     private fun getIntentMethod() {
         songPosition = intent.getIntExtra("songPosition", -1)
         songList = musicArrayList
-        if (songList != null) {
-            song = songList[songPosition].contentUri
-        }
+        song = songList[songPosition].contentUri
         duration = intent.getIntExtra("duration", 0)
         size = intent.getIntExtra("size", 0)
         songName = intent.getStringExtra("songName")
@@ -232,17 +225,13 @@ class MusicActivity : AppCompatActivity(), MusicPlayerListener,
         startService(intent)
     }
 
-    fun setViews() {
+    private fun setViews() {
         tvSongSize.text = size.toString()
         tvSongName.text = songName
 //        ivSongImage.setImageResource(image!!)
         if (musicService != null) {
             tvTotalPlayingTime.text = formattedTime(musicService!!.getDuration() / 1000)
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     override fun onCompletion() {
@@ -265,14 +254,14 @@ class MusicActivity : AppCompatActivity(), MusicPlayerListener,
         btnTracking.setOnClickListener {
             if (!btnTrackingStatus) {
                 btnTracking.setImageResource(R.drawable.ic_accessibility_checked)
-                btnTrackingStatus = true;
+                btnTrackingStatus = true
 
                 musicService!!.trackingEnabled()
             }
             else{
                 btnTracking.setImageResource(R.drawable.ic_accessibility_unchecked)
                 musicService!!.trackingDisabled()
-                btnTrackingStatus = false;
+                btnTrackingStatus = false
             }
         }
     }

@@ -7,11 +7,8 @@ import android.os.Build
 
 class MusicPlayerApplication : Application() {
     companion object {
-        public const val CHANNEL_ID_1 = "channel1"
-        public const val CHANNEL_ID_2 = "channel2"
-        public const val ACTION_PREVIOUS = "actionprevious"
-        public const val ACTION_NEXT = "actionnext"
-        public const val ACTION_PLAY = "actionplay"
+        const val CHANNEL_ID_1 = "channel1"
+        const val CHANNEL_ID_2 = "channel2"
     }
 
     override fun onCreate() {

@@ -17,7 +17,6 @@ import android.net.Uri
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import kotlinx.coroutines.CoroutineScope
@@ -30,19 +29,18 @@ import kotlin.math.abs
 class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionListener {
     private var mediaPlayer: MediaPlayer? = null
     private lateinit var sensorManager: SensorManager
-    var isSensorChangeCalled = false
-    var currentlyWalking = false
-    var uri: Uri? = null
-    var musicFiles = ArrayList<MusicModel>()
-    var position: Int = -1
-    var trackingEnabled = false
+    private var isSensorChangeCalled = false
+    private var currentlyWalking = false
+    private var uri: Uri? = null
+    private var musicFiles = ArrayList<MusicModel>()
+    private var position: Int = -1
+    private var trackingEnabled = false
     private var musicPlayerListener: MusicPlayerListener? = null
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreate() {
         super.onCreate()
 
-        Log.d("umang", "onCreate")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             showNotificationAndStartForeGround()
         } else {
@@ -78,7 +76,7 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showNotificationAndStartForeGround() {
 
-        val icon = BitmapFactory.decodeResource(resources, R.drawable.wallpic)
+        BitmapFactory.decodeResource(resources, R.drawable.wallpic)
 
         val NOTIFICATION_CHANNEL_ID = "lloyd"
         val channelName = "Background Service"
@@ -89,7 +87,6 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
         )
         chan.lightColor = Color.BLUE
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        assert(manager != null)
         manager.createNotificationChannel(chan)
         val notificationBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
         val notification = notificationBuilder.setOngoing(true)
@@ -101,7 +98,7 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        var myPosition = intent?.getIntExtra("servicePosition", -1)
+        val myPosition = intent?.getIntExtra("servicePosition", -1)
         if (myPosition != -1) {
             playMedia(myPosition!!)
         }
@@ -112,7 +109,6 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
                     if (isSensorChangeCalled) {
                         if (!currentlyWalking) {
                             currentlyWalking = true
-                            Log.d("KunalService", "walking")
                             if (!isPlaying()) {
                                 start()
                             }
@@ -120,7 +116,6 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
                     } else {
                         if (currentlyWalking) {
                             currentlyWalking = false
-                            Log.d("KunalService", "Idle")
                             if (isPlaying()) {
                                 pause()
                             }
@@ -138,15 +133,13 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
         if (mediaPlayer != null) {
             mediaPlayer!!.stop()
             mediaPlayer!!.release()
-            if (musicFiles != null) {
-                createMediaPlayer(position)
-            }
+            createMediaPlayer(position)
         } else {
             createMediaPlayer(position)
         }
     }
 
-    override fun onBind(intent: Intent): IBinder? {
+    override fun onBind(intent: Intent): IBinder {
         return ServiceBinder()
     }
 
@@ -218,14 +211,13 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
     override fun onSensorChanged(event: SensorEvent?) {
         if (event?.sensor?.type == Sensor.TYPE_ACCELEROMETER) {
             val sides = event.values[0].toDouble()
-            val updown = event.values[1].toDouble()
+            val upDown = event.values[1].toDouble()
             CoroutineScope(Dispatchers.IO).launch {
                 delay(3000)
                 val newSides = event.values[0].toDouble()
-                val newUpdown = event.values[1].toDouble()
-
+                val newUpDown = event.values[1].toDouble()
                 isSensorChangeCalled =
-                    !(abs(newSides - sides) <= 0.3 && abs(newUpdown - updown) <= 0.3)
+                    !(abs(newSides - sides) <= 0.3 && abs(newUpDown - upDown) <= 0.3)
             }
         }
     }
@@ -235,7 +227,7 @@ class MusicService : Service(), SensorEventListener, MediaPlayer.OnCompletionLis
     }
 
     fun trackingEnabled() {
-        trackingEnabled = true;
+        trackingEnabled = true
     }
 
     fun trackingDisabled() {

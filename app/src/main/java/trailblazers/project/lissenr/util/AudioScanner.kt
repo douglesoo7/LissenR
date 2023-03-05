@@ -1,10 +1,11 @@
-package trailblazers.project.lissenr
+package trailblazers.project.lissenr.util
 
 import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import trailblazers.project.lissenr.MusicModel
 import java.util.concurrent.TimeUnit
 
 object AudioScanner {
@@ -29,7 +30,7 @@ object AudioScanner {
 
     fun scanForAudio(context: Context): List<MusicModel> {
         val musicList = mutableListOf<MusicModel>()
-        val query = context.applicationContext.contentResolver.query(
+        context.applicationContext.contentResolver.query(
             collection,
             projection,
             selection,
