@@ -71,7 +71,7 @@
         android:src="@drawable/ic_accessibility_unchecked" />
 
     <TextView
-        android:id="@+id/tvSongArtist"
+        android:id="@+id/tvSongSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvSongName"
@@ -85,7 +85,7 @@
         android:id="@+id/seekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvSongArtist"
+        android:layout_below="@id/tvSongSize"
         android:layout_marginHorizontal="2dp"
         android:layout_marginStart="2dp"
         android:layout_marginTop="10dp"

@@ -34,23 +34,29 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
 
 
     fun buildData() {
-        musicArrayList = ArrayList()
-        musicArrayList.add(MusicModel("Calii", "Eminem", R.drawable.calii, R.raw.calii))
-        musicArrayList.add(MusicModel("Down for you", "Post Malone", R.drawable.down, R.raw.down))
-        musicArrayList.add(MusicModel("Panda", "G-Easy", R.drawable.panda, R.raw.panda))
-        musicArrayList.add(MusicModel("Epic", "Shawn", R.drawable.epic, R.raw.epic))
-        musicArrayList.add(MusicModel("Ambient", "Ariana", R.drawable.ambient, R.raw.ambient))
-        musicArrayList.add(MusicModel("Panda", "G-Easy", R.drawable.panda, R.raw.panda))
-        musicArrayList.add(MusicModel("Epic", "Shawn", R.drawable.epic, R.raw.epic))
-        musicArrayList.add(MusicModel("Ambient", "Ariana", R.drawable.ambient, R.raw.ambient))
+        Thread(
+            Runnable {
+               val scannedMusicList = AudioScanner.scanForAudio(this)
+                musicArrayList.addAll(scannedMusicList)
+            }
+        ).start()
+//        musicArrayList = ArrayList()
+//        musicArrayList.add(MusicModel("Calii", "Eminem", R.drawable.calii, R.raw.calii))
+//        musicArrayList.add(MusicModel("Down for you", "Post Malone", R.drawable.down, R.raw.down))
+//        musicArrayList.add(MusicModel("Panda", "G-Easy", R.drawable.panda, R.raw.panda))
+//        musicArrayList.add(MusicModel("Epic", "Shawn", R.drawable.epic, R.raw.epic))
+//        musicArrayList.add(MusicModel("Ambient", "Ariana", R.drawable.ambient, R.raw.ambient))
+//        musicArrayList.add(MusicModel("Panda", "G-Easy", R.drawable.panda, R.raw.panda))
+//        musicArrayList.add(MusicModel("Epic", "Shawn", R.drawable.epic, R.raw.epic))
+//        musicArrayList.add(MusicModel("Ambient", "Ariana", R.drawable.ambient, R.raw.ambient))
     }
 
     override fun onclicked(music: MusicModel?, position: Int) {
         val intent = Intent(this, MusicActivity::class.java)
-        intent.putExtra("music", music!!.msong)
-        intent.putExtra("image", music.mImg)
-        intent.putExtra("artist", music.artist)
-        intent.putExtra("songName", music.mName)
+        intent.putExtra("contentUri", music?.contentUri)
+        intent.putExtra("name", music?.fileName)
+        intent.putExtra("duration", music?.duration)
+        intent.putExtra("size", music?.size)
         intent.putExtra("songPosition", position)
         startActivity(intent)
     }
